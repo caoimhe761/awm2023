@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  db:
+    build:
+      context: ./postgres
+    environment:
+      POSTGRES_DB: gis
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    build:
+      context: ./pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: c20365106@mytudublin.ie
+      PGADMIN_DEFAULT_PASSWORD: docker
+    ports:
+      - "5050:5050"
+    depends_on:
+      - db
+
+  django:
+    build:
+      context: ./django
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./django:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - django
+
+volumes:
+  postgres_data:
+

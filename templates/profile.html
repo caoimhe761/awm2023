@@ -1,23 +1,36 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% if user.is_authenticated %}
-    <h1>User Profile</h1>
-    <h2>{{ user.username }}</h2>
-    
-    <h1>Email: {{ user.email }}</h1>
-    
-    <h3>Location:</h3>
-    {% if user.profile.location %}
-        <p>Latitude: {{ user.profile.location.y }}</p>
-        <p>Longitude: {{ user.profile.location.x }}</p>
+  <div class="container">
+    {% if user.is_authenticated %}
+      <div class="user-profile">
+        <h1>User Profile</h1>
+        <h2>{{ user.username }}</h2>
+
+        <div class="email-section">
+          <h3>Email:</h3>
+          <p>{{ user.email }}</p>
+        </div>
+
+        <div class="location-section">
+          <h3>Location:</h3>
+          {% if user.profile.location %}
+            <p>Latitude: {{ user.profile.location.y }}</p>
+            <p>Longitude: {{ user.profile.location.x }}</p>
+          {% else %}
+            <p>No location specified.</p>
+          {% endif %}
+        </div>
+      </div>
     {% else %}
-        <p>No location specified.</p>
+      <div class="not-logged-in">
+        <p>You are not logged in</p>
+        <a href="{% url 'login' %}" class="btn btn-primary">Log In</a>
+      </div>
     {% endif %}
-{% else %}
-<p>You are not logged in</p>
-<a href="{% url 'login' %}">Log In</a>
-{% endif %}
-<p><a href="{% url 'edit_profile' %}">Edit Profile</a></p>
+
+    <div class="edit-profile-link">
+      <p><a href="{% url 'edit_profile' %}" class="btn btn-secondary">Edit Profile</a></p>
+    </div>
+  </div>
 {% endblock %}
-    
