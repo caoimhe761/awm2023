@@ -1,0 +1,37 @@
+
+{% block content %}
+    {% load leaflet_tags %}
+    {% leaflet_css %}
+    {% leaflet_js %}
+
+    <div id="map" style="height: 400px;"></div>
+
+    <script>
+        var map = L.map('map').setView([53.320005, -6.267239], 13);
+
+        // Add a tile layer (you can choose a different one)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Add markers for each location
+        {% for location in data %}
+            var marker = L.marker([{{ location.latitude }}, {{ location.longitude }}]).addTo(map);
+        {% endfor %}
+
+        var popup = L.popup();
+
+        function onMapClick(e) {
+            popup
+                .setLatLng(e.latlng)
+                .setContent("You clicked the map at " + e.latlng.toString())
+                .openOn(map);
+
+                var marker = L.marker(e.latlng).addTo(map);
+        }
+
+
+        map.on('click', onMapClick);
+        // Your additional Leaflet configuration and markers go here
+    </script>
+{% endblock %}

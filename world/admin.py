@@ -1,10 +1,8 @@
-from django.contrib import admin
-
-# Register your models here.
-from django.contrib.gis import admin
-from .models import WorldBorder
 
 from django.contrib.gis import admin
-from .models import WorldBorder
+from .models import Location
 
-admin.site.register(WorldBorder, admin.ModelAdmin)
+class DataAdmin(admin.ModelAdmin):
+    list_display = ('place_name','latitude', 'longitude')
+admin.site.register(Location, admin.ModelAdmin)
+

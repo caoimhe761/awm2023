@@ -1,0 +1,48 @@
+=> ERROR [15/15] RUN python manage.py collectstatic --no-input                                                                                                                                                 1.4s 
+------
+ > [15/15] RUN python manage.py collectstatic --no-input:
+1.226 Traceback (most recent call last):
+1.226   File "/opt/conda/envs/awm_project/lib/python3.10/site-packages/django/core/management/__init__.py", line 255, in fetch_command
+1.226     app_name = commands[subcommand]
+1.226 KeyError: 'collectstatic'
+1.226
+1.226 During handling of the above exception, another exception occurred:
+1.226
+1.226 Traceback (most recent call last):
+1.226   File "/usr/src/app/manage.py", line 22, in <module>
+1.226     main()
+1.226   File "/usr/src/app/manage.py", line 18, in main
+1.226     execute_from_command_line(sys.argv)
+1.226   File "/opt/conda/envs/awm_project/lib/python3.10/site-packages/django/core/management/__init__.py", line 442, in execute_from_command_line
+1.227     utility.execute()
+1.227   File "/opt/conda/envs/awm_project/lib/python3.10/site-packages/django/core/management/__init__.py", line 436, in execute
+1.227     self.fetch_command(subcommand).run_from_argv(self.argv)
+1.227   File "/opt/conda/envs/awm_project/lib/python3.10/site-packages/django/core/management/__init__.py", line 262, in fetch_command
+1.228     settings.INSTALLED_APPS
+1.228   File "/opt/conda/envs/awm_project/lib/python3.10/site-packages/django/conf/__init__.py", line 102, in __getattr__
+1.228     self._setup(name)
+1.228   File "/opt/conda/envs/awm_project/lib/python3.10/site-packages/django/conf/__init__.py", line 89, in _setup
+1.229     self._wrapped = Settings(settings_module)
+1.229   File "/opt/conda/envs/awm_project/lib/python3.10/site-packages/django/conf/__init__.py", line 217, in __init__
+1.229     mod = importlib.import_module(self.SETTINGS_MODULE)
+1.229   File "/opt/conda/envs/awm_project/lib/python3.10/importlib/__init__.py", line 126, in import_module
+1.229     return _bootstrap._gcd_import(name[level:], package, level)
+1.229   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+1.230   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+1.235   File "<frozen importlib._bootstrap>", line 992, in _find_and_load_unlocked
+1.235   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+1.235   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+1.235   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+1.235   File "<frozen importlib._bootstrap>", line 1004, in _find_and_load_unlocked
+1.235 ModuleNotFoundError: No module named 'awm_project'
+------
+Dockerfile:38
+--------------------
+  36 |     COPY . /usr/src/app
+  37 |     # Make sure that static files are up to date and available
+  38 | >>> RUN python manage.py collectstatic --no-input
+  39 |     # Expose port 8001 on the image. We'll map a localhost port to
+  40 |     # later.
+--------------------
+ERROR: failed to solve: process "/bin/bash --login -c python manage.py collectstatic --no-input" did not complete successfully: exit code: 1
+(awm2023) PS C:\Users\caoim\OneDrive - Technological University Dublin\College\4th year\web map\labs\contin\geodjango> 

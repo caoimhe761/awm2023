@@ -7,8 +7,62 @@
   <div class="container">
     <div class="row mt-4">
         <div class="col-md-10 offset-md-1">
-            {{ map1|safe }}
+          {% include 'map.html' %}
         </div>
+        <!-- Your HTML template -->
+    <form id="locationForm">
+      <label for="placeInput">Enter Place:</label>
+      <input type="text" id="placeInput" name="place" required>
+      <button type="button" onclick="getCoordinates()">Get Coordinates</button>
+    
+    
+    </form>
+
+    <div id="result">
+      <!-- Display the result here -->
+    </div>
+
+    <script>
+      
+      function getCoordinates() {
+        var placeInput = document.getElementById('placeInput').value;
+    
+        fetch(`/get-coordinates/?place=${placeInput}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerHTML = `Latitude: ${data.latitude}, Longitude: ${data.longitude}`;
+                displayMarker(data.latitude, data.longitude);
+    
+                // Update hidden form fields with latitude and longitude
+                document.getElementById('latitudeInput').value = data.latitude;
+                document.getElementById('longitudeInput').value = data.longitude;
+    
+                // Submit the form
+                document.getElementById('locationForm').submit();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+    
+
+    function displayMarker(latitude, longitude) {
+        // Clear existing markers
+        map.eachLayer(layer => {
+            if (layer instanceof L.Marker) {
+                map.removeLayer(layer);
+            }
+        });
+
+        // Add a marker at the specified coordinates
+        L.marker([latitude, longitude]).addTo(map);
+        
+        // Set the map view to the marker
+        map.setView([latitude, longitude], 13);
+    }
+
+    </script>
+
     </div>
   </div>
   <p><a href="{% url 'logout' %}">Log Out</a></p>
