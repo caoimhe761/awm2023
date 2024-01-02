@@ -1,0 +1,94 @@
+    {% extends "base.html" %}
+    {% block title %}Clubs{% endblock %}
+
+    {% block content %}
+      {% if user.is_authenticated %}
+        Hi {{ user.username }}!
+        <div class="add-form">
+          <form method="post" action="{% url 'add_club' %}">
+              {% csrf_token %}
+              <strong>Name:</strong><input type="text" name="Name" value="" required>
+              <strong>Type:</strong><input type="text" name="Type" value="" required>
+              <strong>Address:</strong><input type="text" name="Address" value="" required>
+              <strong>Telephone:</strong><input type="text" name="Telephone" value="" required>
+              <strong>Web:</strong><input type="text" name="Web" value="" required>
+              <strong>Streetview:</strong><input type="text" name="Streetview" value="" required>
+              <strong>WGS84Longi:</strong><input type="text" name="WGS84Longi" value="" required>
+              <strong>WGS4Latitu:</strong><input type="text" name="WGS4Latitu" value="" required>
+              <strong>Eircode:</strong><input type="text" name="Eircode" value="" required>
+              <button type="submit">Add Club</button>
+          </form>
+      </div>
+      
+          
+      </div>
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>All Clubs</title>
+        
+        </head>
+        <body>
+          <div class="club-list">
+            <h1>All Clubs</h1>
+            <ul>
+              {% for club in clubs %}
+                <li class="club-item" id="club-{{ club.OBJECTID }}">
+                  <div id="club-info-{{ club.OBJECTID }}">
+                    <p>
+                      <strong>Name:</strong> {{ club.Name }}<br>
+                      <strong>Type:</strong> {{ club.Type }}<br>
+                      <strong>Address:</strong> {{ club.Address }}<br>
+                    </p>
+                  </div>
+                  <div id="update-form-{{ club.OBJECTID }}" class="update-form">
+                    <form method="post" action="{% url 'update_club' club.OBJECTID %}">
+                      {% csrf_token %}
+                      <strong>Name:</strong><input type="text" name="Name" value="{{ club.Name }}" required>
+                      <strong>Type:</strong><input type="text" name="Type" value="{{ club.Type }}" required>
+                      <strong>Address:</strong><input type="text" name="Address" value="{{ club.Address }}" required>
+
+                      <strong>Telephone:</strong><input type="text" name="Telephone" value="{{ club.Telephone }}" required>
+                      <strong>Web:</strong><input type="text" name="Web" value="{{ club.Web }}" required>
+                      <strong>Streetview:</strong><input type="text" name="Streetview" value="{{ club.Streetview }}" required>
+                      <strong>WGS84Longi:</strong><input type="text" name="WGS84Longi" value="{{ club.WGS84Longi }}" required>
+                      <strong>WGS4Latitu:</strong><input type="text" name="WGS4Latitu" value="{{ club.WGS4Latitu }}" required>
+                      <strong>Eircode:</strong><input type="text" name="Eircode" value="{{ club.Eircode }}" required>
+                      <button type="submit">Update Club</button>
+                    </form>
+                    </div>
+
+                  
+                  <a href="javascript:void(0);" onclick="toggleForm('{{ club.OBJECTID }}')">Update</a>
+                  <form  method="post" action="{% url 'delete_club' club.OBJECTID %}">
+                    {% csrf_token %}
+                    <button type="submit" id="delete">Delete</button>
+                </form>
+
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+
+          <script>
+            function toggleForm(clubId) {
+              var infoDiv = document.getElementById('club-info-' + clubId);
+              var formDiv = document.getElementById('update-form-' + clubId);
+
+              if (infoDiv.style.display === 'none' || infoDiv.style.display === '') {
+                infoDiv.style.display = 'block';
+                formDiv.style.display = 'none';
+              } else {
+                infoDiv.style.display = 'none';
+                formDiv.style.display = 'block';
+              }
+            }
+
+          </script>
+        </body>
+        </html>
+      {% else %}
+        <p>You are not logged in</p>
+        <a href="{% url 'login' %}">Log In</a>
+      {% endif %}
+    {% endblock %}

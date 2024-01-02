@@ -1,74 +1,70 @@
-{% extends "base.html" %}
-{% block title %}Home{% endblock %}
+  {% extends "base.html" %}
+  {% block title %}Home{% endblock %}
 
-{% block content %}
-{% if user.is_authenticated %}
-  Hi {{ user.username }}!
-  <div class="container">
-    <div class="row mt-4">
-        <div class="col-md-10 offset-md-1">
-          {% include 'map.html' %}
-        </div>
-        <!-- Your HTML template -->
-    <form id="locationForm">
-      <label for="placeInput">Enter Place:</label>
-      <input type="text" id="placeInput" name="place" required>
-      <button type="button" onclick="getCoordinates()">Get Coordinates</button>
-    
-    
-    </form>
+  {% block content %}
+  {% if user.is_authenticated %}
+    Hi {{ user.username }}!
+    <div class="container">
+      <div class="row mt-4">
+          <div class="col-md-10 offset-md-1">
+            {% include 'map.html' %}
+          </div>
+      </div>
 
-    <div id="result">
-      <!-- Display the result here -->
-    </div>
+      <form id="locationForm">
+        <label for="placeInput">Enter Place:</label>
+        <input type="text" id="placeInput" name="place" required>
+        <button type="button" onclick="getCoordinates()">Get Coordinates</button>
+      </form>
 
-    <script>
+      <div id="result">
+        <!-- Display the result here -->
+      </div>
+      </form>
+      <script>
+        function getCoordinates() {
+          var placeInput = document.getElementById('placeInput').value;
       
-      function getCoordinates() {
-        var placeInput = document.getElementById('placeInput').value;
-    
-        fetch(`/get-coordinates/?place=${placeInput}`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('result').innerHTML = `Latitude: ${data.latitude}, Longitude: ${data.longitude}`;
-                displayMarker(data.latitude, data.longitude);
-    
-                // Update hidden form fields with latitude and longitude
-                document.getElementById('latitudeInput').value = data.latitude;
-                document.getElementById('longitudeInput').value = data.longitude;
-    
-                // Submit the form
-                document.getElementById('locationForm').submit();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
-    
+          fetch(`/get-coordinates/?place=${placeInput}`)
+              .then(response => response.json())
+              .then(data => {
+                  document.getElementById('result').innerHTML = `Latitude: ${data.latitude}, Longitude: ${data.longitude}`;
+                  displayMarker(data.latitude, data.longitude);
+      
+                  // Update hidden form fields with latitude and longitude
+                  document.getElementById('latitudeInput').value = data.latitude;
+                  document.getElementById('longitudeInput').value = data.longitude;
+      
+                  // Submit the form
+                  document.getElementById('locationForm').submit();
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+              });
+        }
 
-    function displayMarker(latitude, longitude) {
-        // Clear existing markers
-        map.eachLayer(layer => {
-            if (layer instanceof L.Marker) {
-                map.removeLayer(layer);
-            }
-        });
+        function displayMarker(latitude, longitude) {
+          // Clear existing markers
+          map.eachLayer(layer => {
+              if (layer instanceof L.Marker) {
+                  map.removeLayer(layer);
+              }
+          });
 
-        // Add a marker at the specified coordinates
-        L.marker([latitude, longitude]).addTo(map);
-        
-        // Set the map view to the marker
-        map.setView([latitude, longitude], 13);
-    }
+          // Add a marker at the specified coordinates
+          L.marker([latitude, longitude]).addTo(map);
+          
+          // Set the map view to the marker
+          map.setView([latitude, longitude], 13);
+        }
 
-    </script>
 
+      </script>
     </div>
-  </div>
-  <p><a href="{% url 'logout' %}">Log Out</a></p>
-{% else %}
-  <p>You are not logged in</p>
-  <a href="{% url 'login' %}">Log In</a>
-{% endif %}
-{% endblock %}
-
+    
+    <p><a href="{% url 'logout' %}">Log Out</a></p>
+  {% else %}
+    <p>You are not logged in</p>
+    <a href="{% url 'login' %}">Log In</a>
+  {% endif %}
+  {% endblock %}

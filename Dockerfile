@@ -1,27 +1,68 @@
-FROM python:3.11
-
-# Set the working directory in the container
+# Dockerfile to generate a Docker image from a GeoDjango project
+# Start from an existing image with Miniconda installed
+FROM continuumio/miniconda3
+MAINTAINER caoimhe 
+ENV PYTHONUNBUFFERED 1
+ENV DJANGO_SETTINGS_MODULE=geodjango.settings
+# Ensure that everything is up-to-date
+RUN apt-get -y update && apt-get -y upgrade
+RUN conda update -n base conda && conda update -n base --all
+RUN conda install -n base conda-libmamba-solver
+RUN conda config --set solver libmamba
+# Make a working directory in the image and set it as working dir.
+RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
+# Get the following libraries. We can install them "globally"
+# on the image as it will contain only our project
+#RUN apt-get -y install build-essential python-cffi libcairo2
+#libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf2.0-0 libffi-
+#dev shared-mime-info
+# You should have already exported your conda environment to an "ENV.yml" file.
+# Now copy this to the image and install everything in it.
+# Make sure to install uwsgi - it may not be in the source
+# environment.
+COPY ENV.yml /usr/src/app
+RUN conda env create -n awm_project --file ENV.yml
+# Make RUN commands use the new environment
+# See https://pythonspeed.com/articles/activate-conda-
+# dockerfile/ for explanation
+RUN echo "conda activate awm_project" >> ~/.bashrc
+SHELL ["/bin/bash", "--login", "-c"]
+# Set up conda to match our test environment
+RUN conda config --add channels conda-forge && conda config --set channel_priority strict
+RUN cat ~/.condarc
+RUN conda install uwsgi
+# Copy everything in your Django project to the image.
+COPY . /usr/src/app
+RUN ls -l /usr/src/app
 
-# Install GDAL dependencies
-RUN apt-get update && apt-get install -y \
-    libgdal-dev \
-    gcc \
-    && rm -rf /var/lib/apt/lists/*
+# Make sure that static files are up to date and available
+RUN python manage.py collectstatic --no-input
+# Expose port 8001 on the image. We'll map a localhost port to
+# later.
+EXPOSE 8001
+# Run "uwsgi". uWSGI is a Web Server Gateway Interface (WSGI)
+# server implementation that is typically used to run Python
+# web applications.
+# CMD uwsgi --ini uwsgi.ini
+# Use an official Python runtime as a parent image
+# FROM python:3.8
 
-# Set GDAL environment variables
-ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
-ENV C_INCLUDE_PATH=/usr/include/gdal
-ENV GDAL_DATA=/usr/share/gdal
+# # Set environment variables
+# ENV PYTHONUNBUFFERED 1
+# ENV DJANGO_SETTINGS_MODULE "geodjango.settings"
 
-# Copy the current directory contents into the container at /usr/src/app
-COPY . .
+# # Set the working directory in the container
+# WORKDIR /app
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# # Copy the current directory contents into the container at /app
+# COPY . /app
 
-# Make port 8000 available to the world outside this container
-EXPOSE 8000
+# # Install any needed packages specified in requirements.txt
+# RUN pip install -r requirements.txt
 
-# Run app.py when the container launches
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# # Make port 8000 available to the world outside this container
+# EXPOSE 8000
+
+# # Run app.py when the container launches
+# CMD ["gunicorn", "your_project.wsgi:application", "--bind", "0.0.0.0:8000"]

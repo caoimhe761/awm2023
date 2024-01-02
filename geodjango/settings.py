@@ -15,13 +15,12 @@ import os
 
 from pathlib import Path
 import sys
-import dj_database_url
 import socket
+import docker_config
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -57,10 +56,14 @@ INSTALLED_APPS = [
     'profiles',
     'crispy_forms',
     'leaflet',
-    'geocoder'
+    'geocoder',
+    'pwa',
+    'fixtures',
+    'club',
 ]
 
 MIDDLEWARE = [
+    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -97,17 +100,26 @@ LOGOUT_REDIRECT_URL = "home"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.contrib.gis.db.backends.postgis',
+#         'NAME': 'gis',
+#         'USER': 'docker',
+#         'PASSWORD': 'docker',
+#         'PORT': 25432,  # Adjusted to the mapped port
+#     },
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'gis',
-        'USER': 'docker',
-        'PASSWORD': 'docker',
-        'PORT': 25432,  # Adjusted to the mapped port
-    },
+        'NAME': 'backend',
+        'USER': 'backend',
+        'PASSWORD': 'backend1',
+        'HOST': 'gis.cxi4a2wi8o0l.eu-west-1.rds.amazonaws.com',
+        'PORT': '5432',
+    }
 }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -151,35 +163,72 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Path to the service worker implementation.  Default implementation is empty.
+PWA_APP_DEBUG_MODE = True
+# PWA_SERVICE_WORKER_PATH = 'static/js/ServiceWorker.js'
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
+PWA_APP_NAME = 'hockey pitches '
+PWA_APP_DESCRIPTION = "add your own hockey pitches "
+PWA_APP_THEME_COLOR = '#0A0302'
+PWA_APP_BACKGROUND_COLOR = '#ffffff'
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_SCOPE = '/'
+PWA_APP_ORIENTATION = 'any'
+PWA_APP_START_URL = '/'
+PWA_APP_STATUS_BAR_COLOR = 'default'
+PWA_APP_ICONS = [
+    {
+        'src': '/static/images/icons/icon-144x144.png',
+        'sizes': '144x144',
+        'purpose': 'any'
+    },
+    {
+        'src': '/static/images/icons/160x160.png',
+        'sizes': '160x160'
+    },
+    {
+        'src': '/static/images/icons/solid-square.png',
+        'sizes': '512x512'
+    }
+]
+PWA_APP_SPLASH_SCREEN = [
+    {
+        'src': '/static/images/icons/splash-640x1136.png',
+        'media': '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'
+    }
+]
+PWA_APP_DIR = 'ltr'
+PWA_APP_LANG = 'en-US'
+PWA_APP_SHORTCUTS = [
+    {
+        'name': 'Shortcut',
+        'url': '/target',
+        'description': 'Shortcut to a page in my application'
+    }
+]
+PWA_APP_SCREENSHOTS = [
+    {
+      'src': '/static/images/icons/splash-750x1334.png',
+      'sizes': '750x1334',
+      'type': 'image/png'
+    },
+        {
+      'src': '/static/images/icons/1280x716.png',
+      'sizes': '1280x716',
+      'type': 'image/png',
+      'form_factor': 'wide',
+      
+    }
+]
 
-STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-TEST_LOCALLY=True
-DEPLOY_SECURE=True
-if TEST_LOCALLY:
-    DATABASES["default"]["HOST"] = "localhost"
-    DATABASES["default"]["PORT"] ='25432'
-else:
-    DATABASES["default"]["HOST"] ="wmap_postgis"
-    DATABASES["default"]["PORT"] = 5432
-# Set DEPLOY_SECURE to True only for LIVE deployment
-if DEPLOY_SECURE:
-    DEBUG = False
-    TEMPLATES[0]["OPTIONS"]["debug"] = False
-    ALLOWED_HOSTS = ['caoimhemccann.xyz', 'localhost', '127.0.0.1','52.200.104.12']
-    CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SECURE = True
-else:
-    DEBUG = True
-    TEMPLATES[0]["OPTIONS"]["debug"] = True
-    ALLOWED_HOSTS = ['*', ]
-    CSRF_COOKIE_SECURE = False
-    SESSION_COOKIE_SECURE = False
+AWS_ACCESS_KEY_ID = 'AKIATXSX6RCEFJ7YKAW2 '
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'backendcaoimhe'
+AWS_S3_SIGNATURE_NAME = 's3v4',
+AWS_S3_REGION_NAME = 'eu-west-1'
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL =  None
+AWS_S3_VERITY = True
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

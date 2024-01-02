@@ -16,8 +16,19 @@
 
         // Add markers for each location
         {% for location in data %}
-            var marker = L.marker([{{ location.latitude }}, {{ location.longitude }}]).addTo(map);
+            var marker = L.marker([{{ location.latitude }}, {{ location.longitude }}])
+            .bindPopup(`<b>${location.name}</b>`)
+            .addTo(map);
         {% endfor %}
+        {% for sports_facility in sports_facilities %}
+        var marker = L.marker([{{ sports_facility.WGS4Latitu }}, {{ sports_facility.WGS84Longi }}])
+        .bindPopup("<b>Name:</b> {{ sports_facility.Name }}<br><b>Type:</b> {{ sports_facility.Type }}<br><b>Eircode:</b> {{ sports_facility.Eircode }}<br><b>Web:</b> {{ sports_facility.Web }}<br><b>Telephone:</b> {{ sports_facility.Telephone }}")
+        .addTo(map);
+    
+    {% endfor %}
+    
+
+
 
         var popup = L.popup();
 

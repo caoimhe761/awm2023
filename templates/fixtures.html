@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Fixtures{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+  Hi {{ user.username }}!
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Fixtures</title>
+</head>
+<body>
+    <h1>All Fixtures</h1>
+    <div id="map"></div>
+    <ul>
+        {% for fixture in upcoming_fixtures %}
+            <li>
+                {{ fixture.date }} - {{ fixture.time }}: {{ fixture.team_name1 }} vs {{ fixture.team_name2 }} at {{ fixture.venue }}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+{% else %}
+  <p>You are not logged in</p>
+  <a href="{% url 'login' %}">Log In</a>
+{% endif %}
+{% endblock %}

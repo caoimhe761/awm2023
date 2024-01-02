@@ -1,21 +1,23 @@
 from django.shortcuts import render
 from .models import Location
-# Create your views here.
+from club.models import SportsFacility
+from django.http import JsonResponse
+from geopy.geocoders import Nominatim
+from django.views.decorators.csrf import csrf_protect
 
-
+@csrf_protect
 def home(request):
-   
     data = Location.objects.all()
-    # print(data)
+    sports_facilities = SportsFacility.objects.all()
     context = {
         'data': data,
+        'sports_facilities': sports_facilities,
     }
 
     return render(request, 'home.html', context)
+from django.views.decorators.csrf import csrf_protect
 
-from django.http import JsonResponse
-from geopy.geocoders import Nominatim
-
+@csrf_protect
 def get_coordinates(request):
     if request.method == 'GET':
         place = request.GET.get('place', '')
@@ -31,5 +33,3 @@ def get_coordinates(request):
             return JsonResponse(coordinates)
         else:
             return JsonResponse({'error': 'Location not found'}, status=400)
-
-
