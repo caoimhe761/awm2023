@@ -21,6 +21,8 @@ class SportsFacility(models.Model):
     WGS4Latitu = models.FloatField(default=0.0, null=True,)
     Eircode = models.CharField(max_length=7, null=True, default='Unknown Eircode')
 
+    geometry = models.PointField(default='POINT(0 0)')
+
     def __str__(self):
         return self.Name
 

@@ -23,13 +23,16 @@
 from django.contrib import admin
 from django.urls import include, path
 from . import settings
+from django.views.generic import TemplateView
 
 
 urlpatterns = [
+    path("", TemplateView.as_view(template_name="home.html"), name="home"),
     path('admin/', admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
     path('profiles/', include('profiles.urls')),  
     path('fixtures/', include('fixtures.urls')),  
-    path('clubs/', include('club.urls')),  
+    path('clubs/', include('club.urls')),    
+    path('', include("pwa.urls")),
     path('', include('world.urls')),
 ] 

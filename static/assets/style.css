@@ -1,0 +1,134 @@
+/* p {
+    text-align: center;
+}
+
+main {
+    width: 100%;
+}
+
+.card-header {
+        font-size: large;
+}
+
+label[for="id_username"], label[for="id_password"] {
+    display: none;
+}
+
+.login-body {
+    background-color: #dddddd;
+}
+
+#id_password, #id_username {
+    background-color: #b4dfd644;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 16px;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.updatedb {
+    margin-bottom: 20px !important;
+    float: left !important;
+    color: white;
+}
+
+.custom-icon {
+    font-size: 20px;
+    color: #4b059c;
+}
+
+.data-vis{
+    margin-top: 50px;
+}
+
+#fishing_map {
+    height: 70vh;
+}
+
+.btn {
+    margin: auto;
+    text-align: center;
+}
+
+.toast {
+    margin: auto;
+}
+
+h1{
+    text-align: center;
+    margin-top: 20px;
+}
+
+.lon-span {
+    margin-right: 10px;
+}
+
+main {
+    width: 100%;
+}
+
+#favouriteLocation {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+#lastUpdated {
+    font-size: 1em;
+    color: #718394; 
+}
+
+
+#chatbox {
+    max-height: 700px;
+    overflow-y: auto;
+    padding: 5px;
+    margin-bottom: 20px;
+    background-color: white;
+    border-radius: 8px;
+}
+
+#chatbox p {
+    margin: 15px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #e9ecef;
+    border: 1px solid #dee2e6;
+}
+
+.assistant{
+    background-color: #3da998 !important;
+    color: #fff !important;
+}
+
+#userInput {
+    width: calc(100% - 90px);
+    padding: 5px;
+    margin-right: 5px;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+}
+
+.sendBtn {
+    width: 80px;
+    background-color: #0dcaf0;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+sendBtn:hover {
+    background-color: #0056b3;
+}
+
+#loadingSpinner {
+    width: 50px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.loading_gif {
+    width: 50px;
+} */
